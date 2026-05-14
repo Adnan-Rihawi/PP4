@@ -58,6 +58,9 @@ In this exercise you will:
 # 1) The exact ssh command you ran
 # 2) A detailed, step-by-step explanation of what happened at each stage
 ```
+1) ssh -v adnan_rihawi@128.140.85.215
+2) Beim SSH‑Login wird zuerst eine TCP‑Verbindung aufgebaut. Danach handeln Client und Server im SSH‑Handshake die Verschlüsselungs‑ und Schlüsselaustauschverfahren aus. Anschließend authentifiziert sich der Server über seinen Host‑Key, der mit der Datei known_hosts abgeglichen wird. Zum Schluss authentifiziert sich der Benutzer. Da keine privaten Schlüssel vorhanden waren, erfolgte die Anmeldung per Passwort.
+
 
 ---
 
