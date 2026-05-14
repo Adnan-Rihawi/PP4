@@ -81,15 +81,36 @@ In this exercise you will:
 4. Explain in writing:
 
    * How the **private key** is used to sign challenges.
+   * Der SSH‑Server sendet beim Login eine zufällige Challenge an den Client.
+Der Client nimmt diese Challenge und erzeugt mit seinem privaten Ed25519‑Schlüssel eine digitale Signatur.
+Der private Schlüssel verlässt dabei niemals das Gerät — er wird nur intern benutzt, um die Signatur zu berechnen.
+Die Signatur beweist dem Server, dass der Client den privaten Schlüssel besitzt.
    * How the **public key** on the server verifies signatures without revealing the private key.
+   * Der Server besitzt den öffentlichen Schlüssel in der Datei ~/.ssh/authorized_keys.
+Mit diesem öffentlichen Schlüssel kann der Server mathematisch prüfen, ob die Signatur gültig ist.
+Wichtig: Der öffentliche Schlüssel kann die Signatur prüfen, aber niemals den privaten Schlüssel rekonstruieren.
+So kann der Server sicherstellen, dass der richtige Benutzer sich anmeldet, ohne dass ein Passwort übertragen wird.
    * Why Ed25519 is preferred (performance, security).
+   * Ed25519 ist heute der Standard in OpenSSH, weil es sehr schnell, sehr sicher und resistent gegen Seitenkanalangriffe ist.
+Die Schlüssel sind deutlich kürzer als RSA‑Schlüssel, bieten aber höhere Sicherheit.
+Außerdem ist Ed25519 weniger fehleranfällig, benötigt keine großen Schlüsselgrößen und ist optimal für moderne Hardware optimiert.
+   * 
 
 **Provide:**
 
 ```bash
 # 1) The ssh-keygen command you ran
+ssh-keygen -t ed25519 -C "adnan_rihawi"
 # 2) The file paths of the generated keys
+cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
 # 3) Your written explanation (3–5 sentences) of the signature process
+Ein Ed25519‑Schlüsselpaar besteht aus einem privaten und einem öffentlichen Schlüssel.
+Beim SSH‑Login sendet der Server eine zufällige Challenge an den Client.
+Der Client signiert diese Challenge mit seinem privaten Schlüssel, der niemals übertragen wird.
+Der Server prüft die Signatur mit dem öffentlichen Schlüssel, der in authorized_keys gespeichert ist.
+Wenn die Signatur gültig ist, beweist der Client, dass er den privaten Schlüssel besitzt, und der Login wird ohne Passwort erlaubt.
 ```
 
 ---
