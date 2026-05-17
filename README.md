@@ -160,7 +160,7 @@ Host vorlesung
     IdentityFile C:\Users\Adnan\.ssh\id_ed25519
     Port 22
 # 2) A short explanation (3–4 sentences) of how the config simplifies connections
-    SSH liest die Datei ~/.ssh/config von oben nach unten und wählt den ersten Host‑Eintrag aus, der zum eingegebenen Alias passt. Der Wert bei Host ist nur ein        selbst gewählter Kurzname, während HostName die echte IP‑Adresse oder Domain des Servers ist. Wenn ich ssh vorlesung eingebe, übernimmt SSH automatisch alle        gespeicherten Einstellungen wie Benutzername, Schlüsseldatei und Port. Dadurch muss ich keine langen SSH‑Befehle mehr tippen, was Verbindungen schneller,           einfacher und weniger fehleranfällig macht.
+    SSH liest die Datei ~/.ssh/config von oben nach unten und wählt den ersten Host‑Eintrag aus, der zum eingegebenen Alias passt. Der Wert bei Host ist nur ein selbst gewählter Kurzname, während HostName die echte IP‑Adresse oder Domain des Servers ist. Wenn ich ssh vorlesung eingebe, übernimmt SSH automatisch alle gespeicherten Einstellungen wie Benutzername, Schlüsseldatei und Port.Dadurch muss ich keine langen SSH‑Befehle mehr tippen,was Verbindungen schneller,einfacher und weniger fehleranfällig macht.
 ```
 
 ---
@@ -191,14 +191,22 @@ Host vorlesung
 5. Explain:
 
    * How `scp` initiates an SSH session for each transfer.
+     scp startet für jede einzelne Dateiübertragung automatisch eine neue SSH‑Sitzung. Das bedeutet, dass jede Übertragung dieselben Sicherheitsmechanismen nutzt        wie ein normaler SSH‑Login (Authentifizierung, Schlüsselprüfung, Host‑Verifikation).
    * The role of encryption in protecting data in transit.
+     Da scp vollständig auf SSH basiert, werden alle übertragenen Daten verschlüsselt, bevor sie das Netzwerk verlassen. Dadurch können Dritte weder Inhalte noch        Zugangsdaten mitlesen oder manipulieren, selbst wenn der Datenverkehr abgefangen wird.
 
 **Provide:**
 
 ```bash
 # 1) Each scp command you ran
+scp C:\Users\Adnan\test.txt adnan_rihawi@128.140.85.215:~/uploads/
+scp adnan_rihawi@128.140.85.215:~/server.log C:\Users\Adnan\Downloads\
+scp -r adnan_rihawi@128.140.85.215:/home/adnan_rihawi/source \
+       adnan_rihawi@128.140.85.215:/home/adnan_rihawi/backup/
 # 2) Any flags or options used
+-r   # rekursiv kopieren (für Ordner)
 # 3) A brief explanation (2–3 sentences) of scp’s mechanism
+scp startet für jede Dateiübertragung automatisch eine neue SSH‑Sitzung, wodurch dieselben Sicherheitsmechanismen wie beim normalen Einloggen gelten. Die gesamte Kommunikation wird verschlüsselt, sodass weder Dateien noch Zugangsdaten unterwegs mitgelesen oder verändert werden können. Dadurch ist SCP eine sichere Methode,um Daten zwischen lokalen und entfernten Systemen zu übertragen.
 ```
 
 ---
@@ -236,15 +244,33 @@ Host vorlesung
 4. Explain:
 
    * The difference between `~/.bashrc` and `~/.profile` (interactive vs. login shells).
+     ~/.profile wird von Login‑Shells gelesen, also z. B. wenn du dich per SSH auf einem Server anmeldest.
+     ~/.bashrc wird von interaktiven, nicht‑Login‑Shells geladen, z. B. jedes Mal, wenn du ein neues Terminalfenster öffnest oder bash startest.
    * Why and when each file is read.
+     ~/.profile wird nur einmal beim Einloggen ausgeführt, weil dort Umgebungsvariablen und Startskripte stehen sollen, die nur einmal gesetzt werden müssen.
+     ~/.bashrc wird jedes Mal ausgeführt, wenn eine neue Bash‑Shell startet, damit Aliase, Funktionen und Einstellungen immer verfügbar sind.
+     Darum gehören Login‑Tasks in .profile und interaktive Einstellungen in .bashrc.
    * How sourcing differs from executing.
+     Beim Sourcen (source datei.sh) wird der Inhalt der Datei im aktuellen Shell‑Prozess ausgeführt — Variablen, Funktionen und Änderungen bleiben erhalten.
+     Beim Ausführen (./datei.sh) startet Bash einen neuen, separaten Prozess, der nach dem Ende wieder verschwindet und keine Änderungen an deiner aktuellen Shell       hinterlässt.
+    Darum werden Startskripte wie login_tasks.sh immer gesourct, nicht ausgeführt.
+     
 
 **Provide:**
 
 ```bash
 # 1) The contents of login_tasks.sh
+#!/bin/bash
+echo "Willkommen, Adnan! Login-Tasks wurden ausgeführt."
+date
 # 2) The lines you added to ~/.bashrc or ~/.profile
+source ~/login_tasks.sh
 # 3) Your explanation (3–5 sentences) of shell init files and sourcing vs. executing
+~/.profile wird von Login‑Shells gelesen, zum Beispiel wenn man sich per SSH auf einem Server anmeldet.
+~/.bashrc wird dagegen von interaktiven Shells geladen, also jedes Mal, wenn ein neues Terminalfenster geöffnet wird.
+Beim Sourcen (source datei.sh) wird der Inhalt der Datei im aktuellen Shell‑Prozess ausgeführt, sodass Variablen, Funktionen und Änderungen erhalten bleiben.
+Beim Ausführen (./datei.sh) startet Bash einen neuen Prozess, der nach dem Ende wieder verschwindet und keine Änderungen an der aktuellen Shell hinterlässt.
+Darum werden Startskripte wie login_tasks.sh in .profile eingebunden und gesourct, nicht ausgeführt.
 ```
 
 ---
