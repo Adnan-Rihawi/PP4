@@ -143,14 +143,24 @@ Wenn die Signatur gültig ist, beweist der Client, dass er den privaten Schlüss
 4. Explain:
 
    * How SSH reads `~/.ssh/config` and matches hosts.
+     SSH liest die Datei ~/.ssh/config von oben nach unten und sucht nach dem ersten Host‑Eintrag, der zum eingegebenen Befehl passt. Wenn du z. B. ssh vorlesung        eingibst, vergleicht SSH den Namen „vorlesung“ mit allen Host‑Mustern und wendet dann die darunterstehenden Einstellungen (User, HostName, IdentityFile, Port)      automatisch an.
    * The difference between `HostName` and `Host`.
+     Host ist ein Alias, den du selbst erfindest. Er existiert nur auf deinem eigenen Computer und dient als Kurzname.
+     HostName ist die echte Adresse des Servers (IP oder Domain), zu dem SSH sich verbinden soll.
    * How aliases prevent long commands.
+     Aliase verhindern lange SSH‑Befehle, weil ein kurzer Name wie vorlesung automatisch alle gespeicherten Einstellungen (Benutzername, IP‑Adresse, Port und            Schlüssel) ersetzt und dadurch das Tippen komplexer Befehle überflüssig macht.
 
 **Provide:**
 
 ```text
 # 1) The full contents of your ~/.ssh/config
+Host vorlesung
+    HostName 128.140.85.215
+    User adnan_rihawi
+    IdentityFile C:\Users\Adnan\.ssh\id_ed25519
+    Port 22
 # 2) A short explanation (3–4 sentences) of how the config simplifies connections
+    SSH liest die Datei ~/.ssh/config von oben nach unten und wählt den ersten Host‑Eintrag aus, der zum eingegebenen Alias passt. Der Wert bei Host ist nur ein        selbst gewählter Kurzname, während HostName die echte IP‑Adresse oder Domain des Servers ist. Wenn ich ssh vorlesung eingebe, übernimmt SSH automatisch alle        gespeicherten Einstellungen wie Benutzername, Schlüsseldatei und Port. Dadurch muss ich keine langen SSH‑Befehle mehr tippen, was Verbindungen schneller,           einfacher und weniger fehleranfällig macht.
 ```
 
 ---
